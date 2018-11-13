@@ -16,6 +16,9 @@ from copy import copy, deepcopy
 #from patternlocalisation.pattern_localisation import PatternLocalisation
 import patternlocalisation
 
+from pyquaternion import Quaternion
+
+
 # Load stereo calibration
 calib_fn = "stereo_cams_4103130811_4103189394.npy"
 stereoCalib = np.load(calib_fn).item()
@@ -40,3 +43,15 @@ Hc, points2dLeft, points2dRight, points3dInLeftCamCoord = pattern_localizer.calc
 
 print("cam->pattern pose:")
 print(Hc)
+
+print("Hc[0:3,0:3]^T * Hc[0:3,0:3]:")
+rotation_part = Hc[0:3,0:3]
+print(np.matmul(np.transpose(rotation_part), rotation_part))
+
+print("Orthogonality check:")
+check = np.allclose(np.matmul(rotation_part, rotation_part.transpose()), np.eye(3), rtol=1e-05, atol=1e-08)
+print(check)
+
+print("Hc[0:3,0:3] as quaternion:")
+quaternion = Quaternion(matrix=rotation_part)
+print(quaternion)

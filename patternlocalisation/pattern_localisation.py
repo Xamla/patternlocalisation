@@ -14,6 +14,7 @@ import cv2 as cv
 import os
 import math
 from numpy.linalg import inv
+from numpy.linalg import pinv
 from numpy.linalg import norm
 
 this_dir, this_filename = os.path.split(__file__) 
@@ -520,8 +521,9 @@ class PatternLocalisation:
         b[i] = pointsInCamCoords[i][2]
         i += 1
       # Calculate x = A^-1 * b = (A^T A)^-1 * A^T * b (with pseudo inverse of A)
-      At = A.transpose() #A:transpose(1, 2)
-      x = np.matmul(inv(np.matmul(At, A)), At).dot(b)
+      #At = A.transpose() #A:transpose(1, 2)
+      #x = np.matmul(inv(np.matmul(At, A)), At).dot(b)
+      x = pinv(A).dot(b)
 
       # Determine z-axis as normal on plane:
       n = np.zeros((3), np.float64)

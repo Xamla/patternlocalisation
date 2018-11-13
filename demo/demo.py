@@ -13,15 +13,16 @@ from numpy.linalg import eig
 
 from copy import copy, deepcopy
 
-from patternlocalisation.pattern_localisation import PatternLocalisation
-
+#from patternlocalisation.pattern_localisation import PatternLocalisation
+import patternlocalisation
 
 # Load stereo calibration
 calib_fn = "stereo_cams_4103130811_4103189394.npy"
 stereoCalib = np.load(calib_fn).item()
 
 # Create pattern localizer
-pattern_localizer = PatternLocalisation()
+#pattern_localizer = PatternLocalisation()
+pattern_localizer = patternlocalisation.PatternLocalisation()
 pattern_localizer.circleFinderParams.minArea = 300
 pattern_localizer.circleFinderParams.maxArea = 4000
 #pattern_localizer.setPatternIDdictionary(np.load("patDictData.npy"))

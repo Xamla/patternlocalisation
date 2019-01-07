@@ -387,13 +387,25 @@ class PatternLocalisation:
     return camPoseList
 
 
-  def calcCamPoseViaPlaneFit(self, imgLeft, imgRight, whichCam, doDebug) :
+  def calcCamPoseViaPlaneFit(self, imgLeft, imgRight, whichCam, doDebug, t7=False) :
     stereoCalibration = self.stereoCalibration
-    leftCamMat = stereoCalibration["camLeftMatrix"]
-    rightCamMat = stereoCalibration["camRightMatrix"]
-    leftDistCoeffs = stereoCalibration["camLeftDistCoeffs"]
-    rightDistCoeffs = stereoCalibration["camRightDistCoeffs"]
-    rightLeftCamTrafo = stereoCalibration["trafoLeftToRightCam"]
+    leftCamMat = None
+    rightCamMat = None
+    leftDistCoeffs = None
+    rightDistCoeffs = None
+    rightLeftCamTrafo = None
+    if t7:
+      leftCamMat = stereoCalibration.camLeftMatrix
+      rightCamMat = stereoCalibration.camRightMatrix
+      leftDistCoeffs = stereoCalibration.camLeftDistCoeffs
+      rightDistCoeffs = stereoCalibration.camRightDistCoeffs
+      rightLeftCamTrafo = stereoCalibration.trafoLeftToRightCam
+    else:
+      leftCamMat = stereoCalibration["camLeftMatrix"]
+      rightCamMat = stereoCalibration["camRightMatrix"]
+      leftDistCoeffs = stereoCalibration["camLeftDistCoeffs"]
+      rightDistCoeffs = stereoCalibration["camRightDistCoeffs"]
+      rightLeftCamTrafo = stereoCalibration["trafoLeftToRightCam"]
 
     camPoseFinal = np.zeros((4, 4), np.float64)
     nPoints = self.pattern["width"] * self.pattern["height"]

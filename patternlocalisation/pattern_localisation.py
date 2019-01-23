@@ -16,6 +16,7 @@ import math
 from numpy.linalg import inv
 from numpy.linalg import pinv
 from numpy.linalg import norm
+from copy import deepcopy
 
 this_dir, this_filename = os.path.split(__file__) 
 
@@ -599,7 +600,7 @@ class PatternLocalisation:
       camPoseFinal[2][3] = pointsInCamCoords[0][2]
       camPoseFinal[3][3] = 1
       
-      camPoseList[current_id] = camPoseFinal
+      camPoseList[current_id] = deepcopy(camPoseFinal)
       pattern_count += 1
 
     if len(camPoseList) == 1 :

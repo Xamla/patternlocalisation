@@ -457,10 +457,16 @@ class PatternLocalisation:
     #cv.imshow("imgLeftRectUndist", imgLeftRectUndist)
     #cv.imshow("imgRightRectUndist", imgRightRectUndist)
     #cv.waitKey(5000)
+    #self.findCircles(imgLeftRectUndist, True)
+    #self.findCircles(imgRightRectUndist, True)
 
     # Determine a point list of all circle patterns in the left/right image
     pointListLeft = self.findCirclePatterns(imgLeftRectUndist.copy(), self.debugParams["circlePatternSearch"])  
     pointListRight = self.findCirclePatterns(imgRightRectUndist.copy(), self.debugParams["circlePatternSearch"])
+    #print("len(pointListLeft):")
+    #print(len(pointListLeft))
+    #print("len(pointListRight):")
+    #print(len(pointListRight))
 
     # Determine the ids of all found circle patterns
     id_list_left = []
@@ -475,10 +481,11 @@ class PatternLocalisation:
       id_list_right.append(id_right)
       pointsLeft_with_ids[str(id_left)] = pointListLeft[i]
       pointsRight_with_ids[str(id_right)] = pointListRight[i]
-      i += 1   
-  
+      i += 1
+
     # Loop over all found patterns:
     camPoseList = {}
+    pointsInCamCoords_with_ids = {}
     pattern_count = 0
     while pattern_count < len(id_list_left) :
       current_id = str(id_list_left[pattern_count])
@@ -518,7 +525,8 @@ class PatternLocalisation:
         while i < nPoints :
           pointsInCamCoords[i] = inv(rightR).dot(resulting3DPoints[i])
           i += 1
-    
+      pointsInCamCoords_with_ids[current_id] = pointsInCamCoords
+
       # Generate plane through detected 3d points to get the transformation 
       # of the pattern into the coordinatesystem of the camera:
       ######################################################################
@@ -594,8 +602,10 @@ class PatternLocalisation:
       camPoseList[current_id] = camPoseFinal
       pattern_count += 1
 
-    #return camPoseList, circlesGridPointsLeft, circlesGridPointsRight, pointsInCamCoords
-    return camPoseFinal, circlesGridPointsLeft, circlesGridPointsRight, pointsInCamCoords
+    if len(camPoseList) == 1 :
+      return camPoseFinal, circlesGridPointsLeft, circlesGridPointsRight, pointsInCamCoords
+    else :
+      return camPoseList, pointsLeft_with_ids, pointsRight_with_ids, pointsInCamCoords_with_ids
 
 
   def processImg(self, inputImg):

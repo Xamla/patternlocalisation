@@ -468,6 +468,18 @@ class PatternLocalisation:
     #print(len(pointListLeft))
     #print("len(pointListRight):")
     #print(len(pointListRight))
+    if len(pointListLeft) == 0 :
+      print("No circle pattern found in rectified left camera image!")
+      print("Please adapt circle finder parameters, in particular min/max area.")
+      return
+    if len(pointListRight) == 0:
+      print("No circle pattern found in rectified right camera image!")
+      print("Please adapt circle finder parameters, in particular min/max area.")
+      return
+    if len(pointListLeft) != len(pointListRight) :
+      print("Number of circle patterns found in left and right image differs!")
+      print("Please adapt circle finder parameters, in particular min/max area.")
+      return
 
     # Determine the ids of all found circle patterns
     id_list_left = []

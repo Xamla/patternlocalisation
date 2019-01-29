@@ -111,6 +111,8 @@ class PatternLocalisation:
     self.pattern["height"] = 1
     self.pattern["pointDist"] = 0
     self.generateDefaultCircleFinderParams()
+    self.findCirclesGridFlag = cv.CALIB_CB_ASYMMETRIC_GRID + cv.CALIB_CB_CLUSTERING
+    # Note: cv.CALIB_CB_CLUSTERING is more robust to perspective distortions but much more sensitive to background clutter.
     self.camIntrinsics = None
     self.stereoCalibration = None
     self.debugParams = {"circleSearch": False, "circlePatternSearch": False, "pose": False}
@@ -125,6 +127,8 @@ class PatternLocalisation:
   def setPatternIDdictionary(self, dict):
     self.patDictData = dict
 
+  def setFindCirclesGridFlag(self, flag) :
+    self.findCirclesGridFlag = flag
 
   def setCamIntrinsics(self, camCalib):
     self.camIntrinsics = camCalib
@@ -225,9 +229,10 @@ class PatternLocalisation:
     hull_list = []
     while found == True :
       found, points = cv.findCirclesGrid( image = imgMasked,
-                                           patternSize = ( self.pattern["width"], self.pattern["height"] ), 
-                                           flags = cv.CALIB_CB_ASYMMETRIC_GRID + cv.CALIB_CB_CLUSTERING, 
-                                           blobDetector = blobDetector )
+                                          patternSize = ( self.pattern["width"], self.pattern["height"] ), 
+                                          flags = self.findCirclesGridFlag,
+                                          blobDetector = blobDetector )
+
       if found == True :
         points = np.squeeze(points, axis=1)
         point_list.append(points)

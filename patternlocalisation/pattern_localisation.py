@@ -460,19 +460,18 @@ class PatternLocalisation:
                                                                m1type = cv.CV_32FC1 )
     imgRightRectUndist = cv.remap (src = imgRight, map1 = mapAImgRight, map2 = mapBImgRight, interpolation = cv.INTER_NEAREST)
     
-    #cv.imshow("imgLeftRectUndist", imgLeftRectUndist)
-    #cv.imshow("imgRightRectUndist", imgRightRectUndist)
-    #cv.waitKey(5000)
-    #self.findCircles(imgLeftRectUndist, True)
-    #self.findCircles(imgRightRectUndist, True)
+    if doDebug :
+      self.findCircles(imgLeftRectUndist, True)
+      self.findCircles(imgRightRectUndist, True)
 
     # Determine a point list of all circle patterns in the left/right image
     pointListLeft = self.findCirclePatterns(imgLeftRectUndist.copy(), self.debugParams["circlePatternSearch"])  
     pointListRight = self.findCirclePatterns(imgRightRectUndist.copy(), self.debugParams["circlePatternSearch"])
-    #print("len(pointListLeft):")
-    #print(len(pointListLeft))
-    #print("len(pointListRight):")
-    #print(len(pointListRight))
+    if doDebug :
+      print("len(pointListLeft):")
+      print(len(pointListLeft))
+      print("len(pointListRight):")
+      print(len(pointListRight))
     if len(pointListLeft) == 0 :
       print("No circle pattern found in rectified left camera image!")
       print("Please adapt circle finder parameters, in particular min/max area.")
